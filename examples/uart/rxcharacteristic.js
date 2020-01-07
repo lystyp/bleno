@@ -29,8 +29,9 @@ RxCharacteristic.prototype.onWriteRequest = function(data, offset, withoutRespon
 
   console.log('RxCharacteristic - onWriteRequest: value = ' + this._value.toString('hex'));
   console.log('RxCharacteristic - onWriteRequest: original value = ' + this._value.toString());
-  this._socket.emit('rx', this._value.toString());
-
+  if (this._socket) {
+    this._socket.emit('rx', this._value.toString());
+  }
   callback(this.RESULT_SUCCESS);
 };
 

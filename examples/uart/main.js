@@ -1,21 +1,23 @@
+// ------------------------ get ngrok url
+var get_url = require('./get_ngrok_url');
+
+
+// ---------------------- BT service
 var bleno = require('../..');
-
-var BlenoPrimaryService = bleno.PrimaryService;
-
+var fs = require('fs');
 var TxCharacteristic = require('./txcharacteristic');
 var RxCharacteristic = require('./rxcharacteristic');
-var socket = null;
+var BlenoPrimaryService = bleno.PrimaryService;
 
 var rx = new RxCharacteristic();
 var tx = new TxCharacteristic();
-
 console.log('bleno - echo');
-
 bleno.on('stateChange', function(state) {
   console.log('stateChange: ' + state);
-
   if (state === 'poweredOn') {
-    bleno.startAdvertising('raspberry_uart', ['6e400001b5a3f393e0A9e50e24dcca9e']);
+    get_url(function(url){
+      bleno.startAdvertising('UART_' + url, ['6e400001b5a3f393e0A9e50e24dcca9e']);
+    })
   } else {
     bleno.stopAdvertising();
   }
@@ -41,7 +43,7 @@ bleno.on('advertisingStart', function(error) {
 // ------------- Server
 var http = require('http');
 var url = require('url');
-var fs = require('fs');
+
 
 // 加入socket的library
 var io = require('socket.io'); // 加入 Socket.IO
@@ -74,3 +76,6 @@ serv_io.sockets.on('connection', function(socket) {
     rx.setSocket(serv_io.sockets);
     tx.setSocket(socket);
 });
+
+
+

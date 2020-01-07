@@ -34,12 +34,11 @@ TxCharacteristic.prototype.onNotify  = function() {
 };
 
 TxCharacteristic.prototype.setSocket = function(socket) {
-  tx = this;
   socket.on("tx", function(data){
     console.log('Socket tx : ' + data);
 
-    tx._updateValueCallback(Buffer.from(data));
-  })
+    this._updateValueCallback(Buffer.from(data));
+  }.bind(this));
 };
 
 module.exports = TxCharacteristic;
