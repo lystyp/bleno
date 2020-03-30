@@ -10,7 +10,7 @@ var RxCharacteristic = require('./rxcharacteristic');
 var BlenoPrimaryService = bleno.PrimaryService;
 
 var rx = new RxCharacteristic();
-var tx = new TxCharacteristic();
+var tx = new TxCharacteristic(rx);
 console.log('bleno - echo');
 bleno.on('stateChange', function(state) {
   console.log('stateChange: ' + state);
