@@ -66,12 +66,12 @@ RxCharacteristic.prototype.getRequest = function(arr) {
       console.log('RxCharacteristic - get download request.');
       this._status = 1;
       this._pkgNum = arr[2] * 256 + arr[3];
-      this._updateValueCallback([0x32, 0x10, 0x00]);
-    }
+      this._updateValueCallback([0x32, 0x20, 0x00, 0x00]);
+    } 
   } else if (this._status == 1) {
     if (arr.length < 6) {
       console.log('RxCharacteristic error - pkg.length is too short.');
-      this._updateValueCallback([0x32, 0x12, 0x01]);
+      this._updateValueCallback([0x32, 0x20, 0x00, 0x01]);
       this._status = 0;
       this._pkgNum = 0;
       return;
@@ -79,7 +79,7 @@ RxCharacteristic.prototype.getRequest = function(arr) {
 
     if (arr[0] != 0x31 || arr[1] != 0x12) {
       console.log('RxCharacteristic error - prefix is not correct.');
-      this._updateValueCallback([0x32, 0x12, 0x01]);
+      this._updateValueCallback([0x32, 0x20, 0x00, 0x01]);
       this._status = 0;
       this._pkgNum = 0;
       return;
@@ -89,7 +89,7 @@ RxCharacteristic.prototype.getRequest = function(arr) {
     var chunk = arr[2] * 256 + arr[3];
     if (arr.length != (length + 6)) {
       console.log('RxCharacteristic error - prefix is not matched with pkg.length.');
-      this._updateValueCallback([0x32, 0x12, 0x01]);
+      this._updateValueCallback([0x32, 0x20, 0x00, 0x01]);
       this._status = 0;
       this._pkgNum = 0;
       return;
@@ -97,11 +97,18 @@ RxCharacteristic.prototype.getRequest = function(arr) {
 
     if (chunk == this._pkgNum) {
       console.log('RxCharacteristic - get all pkgs.');
-      this._updateValueCallback([0x32, 0x12, 0x00]);
+      this._updateValueCallback([0x32, 0x20, 0x00, 0x00]);
       this._status = 0;
       this._pkgNum = 0;
       return;
     }
+  }
+
+  if (arr[0] == 0x31 && arr[1] == 0x11 && arr[2] == 0x01) {
+    console.log('RxCharacteristic - get cancel request.');
+    this._status = 0;
+    this._pkgNum = 0;
+    this._updateValueCallback([0x32, 0x20, 0x00, 0x00]);
   }
 
 
