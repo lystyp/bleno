@@ -44,8 +44,8 @@ RxCharacteristic.prototype.onWriteRequest = function(data, offset, withoutRespon
         s = "0" + s;
       }
       byteResult = byteResult + s + " ";
-      this._socket.emit('rx', byteResult);
     }
+    this._socket.emit('rx', byteResult);
   }
   callback(this.RESULT_SUCCESS);
 };
