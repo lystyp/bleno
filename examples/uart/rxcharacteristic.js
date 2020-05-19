@@ -109,6 +109,12 @@ RxCharacteristic.prototype.getRequest = function(arr) {
     this._status = 0;
     this._pkgNum = 0;
     this._updateValueCallback([0x32, 0x20, 0x00, 0x00]);
+  } else if (arr[0] == 0xA1 && arr[1] == 0x30 && arr[2] == 0x01) {
+    console.log('RxCharacteristic - get btn request.');
+    this._updateValueCallback([0x32, 0x20, 0x00, 0x00]);
+  } else if (arr[0] == 0xA1 && arr[1] == 0x40 && arr[2] == 0x02) {
+    this._updateValueCallback([0x32, 0x20, 0x00, 0x00]);
+    this._updateValueCallback([0xA2, 0x40, 0x02, 0x01]);
   }
 
 
